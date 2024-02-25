@@ -1,0 +1,21 @@
+version: '3'
+services:
+  mongo:
+    image: mongo:4.4.4
+    container_name: mongo
+    restart: always
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=azat
+      - MONGO_INITDB_ROOT_PASSWORD=tatarin
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./mongo-data-4.4:/data/db
+  top_api:
+    image: top-api:latest
+    container_name: top-api
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./.env:/opt/app/.env
