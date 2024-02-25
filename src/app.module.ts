@@ -4,6 +4,8 @@ import { TopPageModule } from './top-page/top-page.module';
 import { ProductModule } from './product/product.module';
 import { ReviewModule } from './review/review.module';
 import { ConfigModule } from '@nestjs/config';
+import { MongooseModule } from '@nestjs/mongoose';
+import { getMongoConfig } from './config/mongo.config';
 
 @Module({
   imports: [
@@ -11,6 +13,7 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: '.env',
     }),
+    MongooseModule.forRootAsync(getMongoConfig()),
     AuthModule,
     TopPageModule,
     ProductModule,
