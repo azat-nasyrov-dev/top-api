@@ -16,10 +16,14 @@ export class AuthController {
       throw new BadRequestException(ALREADY_REGISTERED_ERROR);
     }
 
-    return await this.authService.createUser(dto);
+    return await this.authService.signup(dto);
   }
 
+  @UsePipes(new ValidationPipe())
   @HttpCode(200)
   @Post('login')
-  public async login(@Body() dto: AuthDto) {}
+  public async login(@Body() { login, password }: AuthDto) {
+    const { email } = await this.authService.validateUser(login, password);
+    return await this.authService.signin(email);
+  }
 }
