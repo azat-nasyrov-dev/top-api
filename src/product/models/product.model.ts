@@ -1,5 +1,5 @@
 import { HydratedDocument } from 'mongoose';
-import { Prop, SchemaFactory } from '@nestjs/mongoose';
+import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 
 export type ProductDocument = HydratedDocument<ProductModel>;
 
@@ -11,6 +11,7 @@ class ProductCharacteristic {
   value: string;
 }
 
+@Schema()
 export class ProductModel {
   @Prop()
   image: string;
@@ -22,13 +23,10 @@ export class ProductModel {
   price: number;
 
   @Prop()
-  oldPrice: number;
+  oldPrice?: number;
 
   @Prop()
   credit: number;
-
-  @Prop()
-  calculatedRating: number;
 
   @Prop()
   description: string;
@@ -48,10 +46,10 @@ export class ProductModel {
   @Prop({ type: () => [ProductCharacteristic], _id: false })
   characteristics: ProductCharacteristic[];
 
-  @Prop()
+  @Prop({ default: () => new Date() })
   createdAt: Date;
 
-  @Prop()
+  @Prop({ default: () => new Date() })
   updatedAt: Date;
 }
 
