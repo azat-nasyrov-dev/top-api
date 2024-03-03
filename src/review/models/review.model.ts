@@ -18,13 +18,13 @@ export class ReviewModel {
   @Prop()
   rating: number;
 
-  @Prop()
+  @Prop({ default: () => new Date() })
   createdAt: Date;
 
-  @Prop()
+  @Prop({ default: () => new Date() })
   updatedAt: Date;
 
-  @Prop({ type: MSchema.Types.ObjectId, ref: ProductModel.name})
+  @Prop({ type: MSchema.Types.ObjectId, ref: ProductModel.name })
   productId: ProductModel;
 }
 
