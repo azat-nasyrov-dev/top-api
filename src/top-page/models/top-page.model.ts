@@ -64,10 +64,10 @@ export class TopPageModel {
   @Prop({ type: () => [String] })
   tags: string[];
 
-  @Prop()
+  @Prop({ default: () => new Date() })
   createdAt: Date;
 
-  @Prop()
+  @Prop({ default: () => new Date() })
   updatedAt: Date;
 }
 
