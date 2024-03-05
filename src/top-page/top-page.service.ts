@@ -26,14 +26,14 @@ export class TopPageService {
 
   public async findByCategory(firstCategory: TopLevelCategory) {
     return await this.topPageModel
-      .find(
-        { firstCategory },
-        {
-          alias: 1,
-          secondCategory: 1,
-          title: 1,
-        },
-      )
+      .aggregate()
+      .match({
+        firstCategory,
+      })
+      .group({
+        _id: { secondCategory: '$secondCategory' },
+        pages: { $push: { alias: '$alias', title: '$title' } },
+      })
       .exec();
   }
 
