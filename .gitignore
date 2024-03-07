@@ -36,3 +36,4 @@ lerna-debug.log*
 
 .env
 mongo-data-4.4
+/uploads
