@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode, Logger,
+  HttpCode,
   NotFoundException,
   Param,
   Patch,
@@ -20,12 +20,14 @@ import { NOT_FOUND_TOP_PAGE_ERROR } from './top-page.constants';
 import { UpdateTopPageDto } from './dto/update-top-page.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
 import { HhService } from '../hh/hh.service';
+import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 
 @Controller('top-page')
 export class TopPageController {
   constructor(
     private readonly topPageService: TopPageService,
     private readonly hhService: HhService,
+    private readonly scheduleRegistry: SchedulerRegistry,
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -93,15 +95,13 @@ export class TopPageController {
     return await this.topPageService.findByText(text);
   }
 
-  @Post('test')
+  @Cron(CronExpression.EVERY_DAY_AT_MIDNIGHT, { name: 'test' })
   public async test() {
+    const job = this.scheduleRegistry.getCronJob('test');
     const data = await this.topPageService.findForHhUpdate(new Date());
 
     for (const page of data) {
-      const hhData = await this.hhService.getData(page.category);
-      Logger.log(hhData);
-      page.hh = hhData;
-
+      page.hh = await this.hhService.getData(page.category);
       await this.topPageService.updateTopPageById(page._id, page);
     }
   }

@@ -11,11 +11,11 @@ export class ReviewService {
     private readonly reviewModel: Model<ReviewDocument>,
   ) {}
 
-  public async createProduct(dto: CreateReviewDto): Promise<ReviewModel> {
+  public async createReview(dto: CreateReviewDto): Promise<ReviewModel> {
     return await this.reviewModel.create(dto);
   }
 
-  public async deleteProduct(id: string): Promise<ReviewModel | null> {
+  public async deleteReviewById(id: string): Promise<ReviewModel | null> {
     return await this.reviewModel.findByIdAndDelete(id).exec();
   }
 

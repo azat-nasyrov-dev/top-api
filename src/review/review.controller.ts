@@ -28,7 +28,7 @@ export class ReviewController {
   @UsePipes(new ValidationPipe())
   @Post('create')
   public async create(@Body() dto: CreateReviewDto) {
-    return await this.reviewService.createProduct(dto);
+    return await this.reviewService.createReview(dto);
   }
 
   @UsePipes(new ValidationPipe())
@@ -47,7 +47,7 @@ export class ReviewController {
   @UseGuards(JwtAuthGuard)
   @Delete(':id')
   public async delete(@Param('id', IdValidationPipe) id: string) {
-    const deletedDoc = await this.reviewService.deleteProduct(id);
+    const deletedDoc = await this.reviewService.deleteReviewById(id);
 
     if (!deletedDoc) {
       throw new HttpException(REVIEW_NOT_FOUND, HttpStatus.NOT_FOUND);
