@@ -3,7 +3,7 @@ import {
   Controller,
   Delete,
   Get,
-  HttpCode,
+  HttpCode, Logger,
   NotFoundException,
   Param,
   Patch,
@@ -19,10 +19,14 @@ import { IdValidationPipe } from '../pipes/id-validation.pipe';
 import { NOT_FOUND_TOP_PAGE_ERROR } from './top-page.constants';
 import { UpdateTopPageDto } from './dto/update-top-page.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt.guard';
+import { HhService } from '../hh/hh.service';
 
 @Controller('top-page')
 export class TopPageController {
-  constructor(private readonly topPageService: TopPageService) {}
+  constructor(
+    private readonly topPageService: TopPageService,
+    private readonly hhService: HhService,
+  ) {}
 
   @UseGuards(JwtAuthGuard)
   @UsePipes(new ValidationPipe())
@@ -87,5 +91,18 @@ export class TopPageController {
   @Get('textSearch/:text')
   public async textSearch(@Param('text') text: string) {
     return await this.topPageService.findByText(text);
+  }
+
+  @Post('test')
+  public async test() {
+    const data = await this.topPageService.findForHhUpdate(new Date());
+
+    for (const page of data) {
+      const hhData = await this.hhService.getData(page.category);
+      Logger.log(hhData);
+      page.hh = hhData;
+
+      await this.topPageService.updateTopPageById(page._id, page);
+    }
   }
 }
